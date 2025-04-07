@@ -9,6 +9,7 @@ django = "*"
 typing-extensions = "*"
 django-stubs = "*"
 ipython = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
