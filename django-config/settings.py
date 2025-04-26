@@ -11,22 +11,26 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Initialize environment variables and read the .env file
+env = environ.Env()
+environ.Env.read_env(
+    env_file=BASE_DIR / '.env',
+    overwrite=True
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = env.bool('DEBUG', default='True')
 
 ALLOWED_HOSTS = []
 
@@ -76,17 +80,17 @@ WSGI_APPLICATION = 'django-config.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Retrieve the database engine from environment variable; default to 'sqlite3'
-db_engine = os.getenv('DATABASE_ENGINE', 'sqlite3')
+DB_ENGINE = env('DATABASE_ENGINE', default='sqlite3')
 
-if db_engine == 'mysql':
+if DB_ENGINE == 'mysql':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DATABASE_NAME', 'django'),
-            'USER': os.getenv('DATABASE_USER', 'root'),
-            'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
-            'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-            'PORT': os.getenv('DATABASE_PORT', '3306'),
+            'NAME': env('DATABASE_NAME', default='django'),
+            'USER': env('DATABASE_USER', default='root'),
+            'PASSWORD': env('DATABASE_PASSWORD', default=''),
+            'HOST': env('DATABASE_HOST', default='127.0.0.1'),
+            'PORT': env('DATABASE_PORT', default='3306'),
         }
     }
 else:
@@ -144,5 +148,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# URL to redirect after login
 
 # LOGIN_REDIRECT_URL = ''
