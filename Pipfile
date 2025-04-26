@@ -8,7 +8,6 @@ python-dotenv = "*"
 django = "*"
 typing-extensions = "*"
 django-stubs = "*"
-ipython = "*"
 mysqlclient = "*"
 
 [dev-packages]
